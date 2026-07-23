@@ -25,32 +25,66 @@ assumed &mdash; every term is defined as it comes up.
 When logged in to GitHub, go to https://github.com/settings/codespaces and
 scroll down to the *Default idle timeout* section. Adjust the value as desired.
 
-<br><br>
-
-**2. Start a new codespace from this repository.**
-Use the green **Code** button on the repo, choose the **Codespaces** tab, and
-create a new codespace. This will run for several minutes while it builds. While
-it runs, do step 3.
+![Changing codespace idle timeout value](./images/31ai5.png?raw=true "Changing codespace idle timeout value")
 
 <br><br>
 
-**3. Get a free Groq API key** (enables the more powerful models and the real
-Llama Guard 4 safety classifier used in Lab 1).
+**2. Click on the button below to start a new codespace from this repository.**
 
-a. In a browser, go to https://console.groq.com and create an account.
-b. Click **API Keys** (top right), then **Create API Key**.
-c. Fill in the info, submit, and **copy the key** (you can't view it again later).
+Click here ➡️  [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/skillrepos/secure-agents?quickstart=1)
 
-The labs still run without a key &mdash; they fall back to the local Ollama model
+<br><br>
+
+**3. Then click on the option to create a new codespace.**
+
+![Creating new codespace from button](./images/31ai1.png?raw=true "Creating new codespace from button")
+
+This will run for a long time while it gets everything ready.
+
+After the initial startup, it will run a script to setup the python environment and install needed python pieces. This will take several more minutes to run. It will look like this while this is running.
+
+![Final prep](./images/31ai2.png?raw=true "Final prep")
+
+The codespace is ready to use when you see a prompt like the one shown below in its terminal.
+
+![Ready to use](./images/31ai3.png?raw=true "Ready to use")
+
+**4. Set up your Groq API key (for the cloud LLM).**
+ 
+This enables the more powerful models and the real Llama Guard 4 safety classifier used in Lab 1.  Create your free Groq key now (while your codespace finishes building) and set it. Follow the directions below.
+ 
+A. Go to [https://console.groq.com](https://console.groq.com) and sign up or log in. No credit card is required for the free tier.
+
+![groq console](./images/v3appb33.png?raw=true "groq console")
+ 
+<br><br>
+
+B. Navigate to [https://console.groq.com/keys](https://console.groq.com/keys) and click *Create API Key*.
+
+![groq api keys](./images/v3appb34.png?raw=true "groq api keys")
+ 
+<br><br>
+
+C. Give it a name, create it, and copy the key value. Save it somewhere — you won't be able to view it again.
+
+![groq api keys](./images/v3appb35.png?raw=true "groq api keys")
+
+![groq api keys](./images/v3appb36.png?raw=true "groq api keys")
+ 
+The labs can still run without a key &mdash; they fall back to the local Ollama model
 &mdash; but a Groq key makes them faster and unlocks Llama Guard.
 
 <br><br>
 
-**4. Ensure the codespace is done setting up.**
-After the initial build, a script sets up the Python environment, installs the
-dependencies and Ollama, and downloads the `llama3.2:3b` model. This takes
-several more minutes. The codespace is ready when you see a normal prompt in the
-terminal.
+**4. Ensure the codespace is done setting up.** 
+After the initial startup, it will run a script to setup the python environment and install needed python pieces. This will take several more minutes to run. It will look like this while this is running.
+
+![Final prep](./images/31ai2.png?raw=true "Final prep")
+
+The codespace is ready to use when you see a prompt like the one shown below in its terminal.
+
+![Ready to use](./images/31ai3.png?raw=true "Ready to use")
+
 
 <br><br>
 
