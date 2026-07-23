@@ -1,0 +1,77 @@
+"""
+Lab 5 - Secure MCP server (COMPLETE REFERENCE)
+
+A real Model Context Protocol server built with FastMCP, exposing three tools
+over streamable HTTP on :8000. Security:
+  1. Every tools/call must carry a valid Bearer JWT (verified with PyJWT)
+  2. The call is allowed only if the token's scopes include tools:<name>
+The scope check runs in FastMCP middleware, so every tool is protected by
+default.
+"""
+from fastmcp import FastMCP
+from fastmcp.server.middleware import Middleware
+from fastmcp.server.dependencies import get_http_headers
+from fastmcp.exceptions import ToolError
+import auth
+
+
+def _bearer(headers):
+    """Pull the raw token out of an 'Authorization: Bearer ...' header."""
+    value = headers.get("authorization", "")
+    if value.lower().startswith("bearer "):
+        return value[7:]
+    return None
+
+
+def enforce_scope(claims, tool_name):
+    """Per-tool authorization: the token must carry the tools:<name> scope."""
+    scopes = claims.get("scope", "").split()
+    if f"tools:{tool_name}" not in scopes:
+        raise ToolError(
+            f"403 Forbidden: token scopes {scopes} do not include tools:{tool_name}")
+
+
+class ScopeMiddleware(Middleware):
+    """Authenticates the JWT and enforces per-tool scopes on every call."""
+
+    async def on_call_tool(self, context, call_next):
+        headers = get_http_headers(include={"authorization"})
+        token = _bearer(headers)
+        if token is None:
+            raise ToolError("401 Unauthorized: missing bearer token")
+        try:
+            claims = auth.verify_token(token)
+        except Exception as e:
+            raise ToolError(f"401 Unauthorized: invalid token ({e})")
+
+        enforce_scope(claims, context.message.name)
+        print(f"[SECURE] {claims['sub']} -> {context.message.name} (allowed)")
+        return await call_next(context)
+
+
+mcp = FastMCP("omnitech-calc")
+mcp.add_middleware(ScopeMiddleware())
+
+
+@mcp.tool
+def add(a: float, b: float) -> float:
+    """Add two numbers."""
+    return a + b
+
+
+@mcp.tool
+def multiply(a: float, b: float) -> float:
+    """Multiply two numbers."""
+    return a * b
+
+
+@mcp.tool
+def divide(a: float, b: float) -> float:
+    """Divide a by b."""
+    return a / b
+
+
+if __name__ == "__main__":
+    print("[SECURE] FastMCP server on http://127.0.0.1:8000/mcp/")
+    print("[SECURE] tools exposed: add, multiply, divide (scope-protected)")
+    mcp.run(transport="http", host="127.0.0.1", port=8000)

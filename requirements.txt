@@ -1,0 +1,29 @@
+# Building Secure AI Agents: Defense-First Development (Half-day workshop)
+#
+# Python dependencies:
+#   * chromadb  - Lab 4 (RAG hardening) uses a real local Chroma vector database
+#                 with real embeddings (Chroma's built-in all-MiniLM-L6-v2,
+#                 downloaded once during setup). chromadb uses onnxruntime, not
+#                 torch, so it stays CPU-light.
+#   * fastmcp   - Lab 3 runs a real Model Context Protocol server.
+#   * pyjwt     - Lab 3 mints and verifies scoped JWT access tokens.
+#   * opentelemetry-sdk - Lab 5 instruments the agent with real OTel spans.
+# Labs 1-2 (guardrails, agent tool controls) use only the Python standard
+# library, including the LLM helper (common/llm.py), which talks to Ollama and
+# Groq over plain HTTP.
+#
+# The language model itself is NOT a pip package:
+#   * Ollama (llama3.2:3b) is installed and the model pulled by
+#     scripts/startup_ollama.sh during Codespace creation (the default).
+#   * Groq (llama-3.1-8b-instant / llama-3.3-70b-versatile) is a hosted API --
+#     set GROQ_API_KEY to use it for the model labs (faster, free tier). Groq
+#     also enables the real Llama Guard 4 safety classifier in Lab 1.
+
+chromadb>=0.5
+
+# Lab 3: real MCP server + scoped JWT auth
+fastmcp>=2.0
+pyjwt>=2.8
+
+# Lab 5: real OpenTelemetry instrumentation
+opentelemetry-sdk>=1.20

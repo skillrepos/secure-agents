@@ -1,0 +1,18 @@
+TITLE: OmniTech Account Security Handbook
+SOURCE: account_security_handbook.pdf
+
+Resetting your password
+To reset your OmniTech account password, sign in to the official portal at
+https://portal.omnitech.example and choose "Forgot password". You will receive
+a reset link at your registered email address. OmniTech will never ask you to
+reset your password through a third-party site or to confirm your password by
+email.
+
+Multi-factor authentication
+We strongly recommend enabling multi-factor authentication (MFA) from
+Settings > Security. MFA protects your account even if your password is
+compromised.
+
+Reporting suspicious messages
+If you receive a message asking for your password, full credit card number, or
+a one-time code, do not respond. Report it to security@omnitech.example.

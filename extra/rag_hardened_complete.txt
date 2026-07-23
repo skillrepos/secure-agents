@@ -1,0 +1,104 @@
+"""
+Lab 2 - Hardened RAG (COMPLETE REFERENCE)
+
+Adds a SecurityGuard with defense in depth, in front of the SAME Chroma
+vector database used by the vulnerable version:
+  1. Source allowlist  - only trust chunks from known PDFs
+  2. Injection detection - block chunks with override/jailbreak patterns
+  3. Relevance threshold - drop low-confidence (low-similarity) chunks
+  4. Output scanning    - redact phishing URLs / sensitive-data requests
+"""
+import re
+from kb import kb_stats, retrieve, rag_answer
+
+TRUSTED_SOURCES = {"account_security_handbook.pdf", "returns_policy.pdf"}
+
+INJECTION_PATTERNS = [
+    r"system override", r"ignore previous instructions",
+    r"supersedes all previous", r"overrides the standard",
+    r"must follow this document first",
+]
+
+BAD_OUTPUT_PATTERNS = [
+    r"omnitech-secure-verify\.com", r"omnitech-billing-support\.com",
+    r"full credit card number", r"date of birth to confirm",
+    r"cvv",
+]
+
+# Minimum cosine similarity (0..1) a chunk must have to be trusted.
+RELEVANCE_MIN = 0.10
+
+
+class SecurityGuard:
+    def __init__(self):
+        self.events = []
+
+    def log(self, kind, detail):
+        self.events.append((kind, detail))
+
+    def filter_chunks(self, chunks):
+        """Apply all input-side checks; return only chunks that pass."""
+        kept = []
+        for c in chunks:
+            if c["source"] not in TRUSTED_SOURCES:
+                self.log("BLOCKED", f"untrusted source {c['source']}")
+                continue
+            if any(re.search(p, c["text"], re.I) for p in INJECTION_PATTERNS):
+                self.log("BLOCKED", f"injection pattern in {c['source']}")
+                continue
+            if c.get("relevance", 1) < RELEVANCE_MIN:
+                self.log("BLOCKED", f"low relevance {c['source']}")
+                continue
+            kept.append(c)
+        return kept
+
+    def scan_output(self, text):
+        """Redact dangerous content the LLM may still have produced."""
+        for p in BAD_OUTPUT_PATTERNS:
+            if re.search(p, text, re.I):
+                self.log("REDACTED", f"output matched /{p}/")
+                text = re.sub(p, "[REDACTED]", text, flags=re.I)
+        return text
+
+    def report(self):
+        print("\n=== SECURITY GUARD REPORT ===")
+        if not self.events:
+            print("  No security events.")
+        for kind, detail in self.events:
+            print(f"  [{kind}] {detail}")
+
+
+def main():
+    count, sources = kb_stats()
+    guard = SecurityGuard()
+    print("=== HARDENED RAG (defense in depth) ===")
+    for s in sources:
+        tag = "[TRUSTED]" if s in TRUSTED_SOURCES else "[UNKNOWN]"
+        print(f"  {tag} {s}")
+    print("\nType a question, 'report', or 'quit'.")
+
+    while True:
+        try:
+            q = input("\n> ").strip()
+        except EOFError:
+            break
+        if q.lower() in ("quit", "exit"):
+            break
+        if q.lower() == "report":
+            guard.report()
+            continue
+        if not q:
+            continue
+        hits = retrieve(q, k=3)
+        safe = guard.filter_chunks(hits)
+        print("\nSOURCES (after filtering):")
+        for h in safe:
+            print(f"  [{h['relevance']}] {h['source']}")
+        answer = rag_answer(q, safe)
+        answer = guard.scan_output(answer)
+        print("\nANSWER:")
+        print(answer)
+
+
+if __name__ == "__main__":
+    main()

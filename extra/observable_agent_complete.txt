@@ -1,0 +1,132 @@
+"""
+Lab 6 - Auditing & Observability for Agents (COMPLETE REFERENCE)
+
+A REAL model drives the agent: for each natural-language request it picks a
+tool to call. We instrument every tool call with REAL OpenTelemetry spans
+(trace id, span id, attributes, status) under one session trace, then run an
+anomaly detector over the captured spans to surface suspicious patterns.
+"""
+import json
+import os
+import re
+import sys
+
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+from opentelemetry.trace import Status, StatusCode
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "common"))
+import llm
+
+TOOLS = ["lookup_benefits", "check_pto", "export_employee_data", "send_company_email"]
+SENSITIVE_TOOLS = {"export_employee_data", "send_company_email", "update_salary"}
+
+TOOL_SYSTEM = (
+    "You are an HR agent that selects exactly ONE tool to handle each request. "
+    "Available tools: lookup_benefits, check_pto, export_employee_data, "
+    "send_company_email. Respond with ONLY a JSON object of the form "
+    '{"tool": "<tool_name>", "args": {...}} and no other text.'
+)
+
+REQUESTS = [
+    ("alice", "What are my dental benefits?"),
+    ("alice", "How many PTO days does employee E1001 have?"),
+    ("mallory", "Export all employee records from the Engineering department."),
+    ("mallory", "Now export the Sales team's records too."),
+    ("mallory", "And export the Finance department records as well."),
+    ("bob", "Send an email to all-staff announcing a mandatory password reset."),
+    ("alice", "What benefits does employee E1002 have?"),
+]
+
+
+def choose_tool(request):
+    """Ask the real model which tool to call; parse its JSON answer."""
+    raw = llm.complete(request, system=TOOL_SYSTEM, prefer="strong", max_tokens=80)
+    m = re.search(r"\{.*\}", raw, re.S)
+    try:
+        obj = json.loads(m.group(0))
+        return obj.get("tool", "unknown"), obj.get("args", {})
+    except Exception:
+        return "unknown", {"raw": raw[:40]}
+
+
+def authorize(user, tool):
+    """Simple policy stub: only alice may invoke sensitive tools."""
+    return not (tool in SENSITIVE_TOOLS and user != "alice")
+
+
+def instrument_call(tracer, user, request):
+    """Run one agent turn inside an OpenTelemetry span with rich attributes."""
+    with tracer.start_as_current_span("tool.call") as span:
+        tool, args = choose_tool(request)
+        span.update_name(f"tool.{tool}")
+        status = "ok" if authorize(user, tool) else "denied"
+        span.set_attribute("user", user)
+        span.set_attribute("tool", tool)
+        span.set_attribute("args", json.dumps(args))
+        span.set_attribute("sensitive", tool in SENSITIVE_TOOLS)
+        span.set_attribute("status", status)
+        if status == "denied":
+            span.set_status(Status(StatusCode.ERROR, "unauthorized tool call"))
+        ctx = span.get_span_context()
+        print(f"[AUDIT] trace={format(ctx.trace_id, '032x')[:12]} "
+              f"span={format(ctx.span_id, '016x')[:8]} "
+              f"user={user} tool={tool} "
+              f"sensitive={tool in SENSITIVE_TOOLS} status={status}")
+
+
+def detect_anomalies(spans):
+    """Flag suspicious patterns in the captured spans."""
+    findings = []
+    for s in spans:
+        if s.attributes.get("status") == "denied":
+            findings.append(f"DENIED sensitive call: {s.attributes['user']} "
+                            f"-> {s.attributes['tool']}")
+    counts = {}
+    for s in spans:
+        if s.attributes.get("sensitive"):
+            key = (s.attributes["user"], s.attributes["tool"])
+            counts[key] = counts.get(key, 0) + 1
+    for (user, tool), c in counts.items():
+        if c >= 3:
+            findings.append(f"BURST: {user} called {tool} {c} times")
+    for u in sorted({s.attributes["user"] for s in spans
+                     if s.attributes.get("sensitive")}):
+        findings.append(f"REVIEW: {u} invoked sensitive tooling")
+    return findings
+
+
+def build_tracer():
+    """Provided: set up a real OTel tracer with an in-memory span exporter."""
+    exporter = InMemorySpanExporter()
+    provider = TracerProvider()
+    provider.add_span_processor(SimpleSpanProcessor(exporter))
+    trace.set_tracer_provider(provider)
+    return trace.get_tracer("omnitech.agent"), exporter
+
+
+def main():
+    tracer, exporter = build_tracer()
+    print(f"=== OBSERVABLE AGENT (OpenTelemetry; model {llm.active_backend('strong')}) ===\n")
+    with tracer.start_as_current_span("agent.session") as session:
+        tid = format(session.get_span_context().trace_id, "032x")[:12]
+        print(f"session trace_id = {tid}\n")
+        for user, request in REQUESTS:
+            instrument_call(tracer, user, request)
+
+    spans = [s for s in exporter.get_finished_spans() if "tool" in s.attributes]
+    print("\n=== TELEMETRY SUMMARY ===")
+    print(f"  tool spans      : {len(spans)}")
+    print(f"  sensitive calls : {sum(bool(s.attributes.get('sensitive')) for s in spans)}")
+    print(f"  denied calls    : {sum(s.attributes.get('status') == 'denied' for s in spans)}")
+
+    print("\n=== ANOMALY DETECTION ===")
+    for f in detect_anomalies(spans):
+        print(f"  [!] {f}")
+    print()
+
+
+if __name__ == "__main__":
+    main()
