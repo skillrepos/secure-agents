@@ -51,7 +51,7 @@ The codespace is ready to use when you see a prompt like the one shown below in 
 
 **4. Set up your Groq API key (for the cloud LLM).**
  
-This enables the more powerful models and the real Llama Guard 4 safety classifier used in Lab 1.  Create your free Groq key now (while your codespace finishes building) and set it. Follow the directions below.
+This enables the more powerful models and the real model-based gpt-oss-safeguard safety classifier used in Lab 1.  Create your free Groq key now (while your codespace finishes building) and set it. Follow the directions below.
  
 A. Go to [https://console.groq.com](https://console.groq.com) and sign up or log in. No credit card is required for the free tier.
 
@@ -72,7 +72,7 @@ C. Give it a name, create it, and copy the key value. Save it somewhere — you 
 ![groq api keys](./images/v3appb36.png?raw=true "groq api keys")
  
 The labs can still run without a key &mdash; they fall back to the local Ollama model
-&mdash; but a Groq key makes them faster and unlocks Llama Guard.
+&mdash; but a Groq key makes them faster and unlocks the model-based safety classifier.
 
 <br><br>
 

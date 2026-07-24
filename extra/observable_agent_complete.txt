@@ -1,5 +1,5 @@
 """
-Lab 6 - Auditing & Observability for Agents (COMPLETE REFERENCE)
+Lab 5 - Auditing & Observability for Agents (COMPLETE REFERENCE)
 
 A REAL model drives the agent: for each natural-language request it picks a
 tool to call. We instrument every tool call with REAL OpenTelemetry spans

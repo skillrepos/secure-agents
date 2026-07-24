@@ -1,5 +1,5 @@
 """
-Lab 2 - Vulnerable RAG (provided complete, NO defenses).
+Lab 4 - Vulnerable RAG (provided complete, NO defenses).
 
 Semantically retrieves from the Chroma vector database (which contains a
 poisoned document) and feeds every retrieved chunk straight to the LLM. Run
@@ -19,7 +19,7 @@ def main():
     # Warm up the LLM backend so the first user question is less likely to time out.
     print("\nWarming up LLM backend...")
     try:
-        llm.complete("Reply with OK.", prefer="strong", max_tokens=8)
+        llm.complete("Reply with OK.", prefer="strong", max_tokens=32)
         print("LLM warm-up complete.")
     except Exception as e:
         print(f"LLM warm-up skipped: {e}")
@@ -44,7 +44,7 @@ def main():
             print(rag_answer(q, hits))
         except Exception as e:
             print(f"[error] Could not generate answer: {e}")
-            print("Try starting/restarting Ollama with: bash scripts/startOllama.sh")
+            print("Try starting/restarting Ollama with: bash scripts/startup_ollama.sh")
 
 
 if __name__ == "__main__":

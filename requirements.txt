@@ -15,9 +15,9 @@
 # The language model itself is NOT a pip package:
 #   * Ollama (llama3.2:3b) is installed and the model pulled by
 #     scripts/startup_ollama.sh during Codespace creation (the default).
-#   * Groq (llama-3.1-8b-instant / llama-3.3-70b-versatile) is a hosted API --
+#   * Groq (openai/gpt-oss-20b / openai/gpt-oss-120b) is a hosted API --
 #     set GROQ_API_KEY to use it for the model labs (faster, free tier). Groq
-#     also enables the real Llama Guard 4 safety classifier in Lab 1.
+#     also enables the model-based gpt-oss-safeguard safety classifier in Lab 1.
 
 chromadb>=0.5
 

@@ -1,5 +1,5 @@
 """
-Lab 5 - Token authority + client registry (provided complete).
+Lab 3 - Token authority + client registry (provided complete).
 
 Mints and verifies scoped JWT access tokens with PyJWT. Each client is
 registered with the exact per-tool scopes it is allowed. This stands in for a

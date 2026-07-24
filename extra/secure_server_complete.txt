@@ -1,5 +1,5 @@
 """
-Lab 5 - Secure MCP server (COMPLETE REFERENCE)
+Lab 3 - Secure MCP server (COMPLETE REFERENCE)
 
 A real Model Context Protocol server built with FastMCP, exposing three tools
 over streamable HTTP on :8000. Security:

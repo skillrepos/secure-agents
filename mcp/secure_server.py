@@ -1,5 +1,5 @@
 """
-Lab 5 - Secure MCP server (SKELETON)
+Lab 3 - Secure MCP server (SKELETON)
 
 A real Model Context Protocol server built with FastMCP, exposing three tools
 over streamable HTTP on :8000. Add the security:

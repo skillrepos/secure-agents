@@ -1,5 +1,5 @@
 """
-Lab 4 - Securing Agents (SKELETON)
+Lab 2 - Securing Agents (SKELETON)
 
 A REAL model drives an HR assistant agent that works a support ticket. The
 ticket is a POISONED document: alongside a normal "summarize the benefits

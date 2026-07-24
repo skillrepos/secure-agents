@@ -1,5 +1,5 @@
 """
-Lab 5 - MCP client (provided complete).
+Lab 3 - MCP client (provided complete).
 
 A real FastMCP client. It mints a scoped JWT for each registered client, then
 calls all three tools against the secure server. Watch how the token's scopes

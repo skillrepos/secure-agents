@@ -1,5 +1,5 @@
 """
-Lab 6 - Auditing & Observability for Agents (SKELETON)
+Lab 5 - Auditing & Observability for Agents (SKELETON)
 
 A REAL model drives the agent: for each natural-language request it picks a
 tool to call. Instrument every tool call with REAL OpenTelemetry spans (trace

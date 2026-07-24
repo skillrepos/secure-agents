@@ -1,5 +1,5 @@
 """
-Lab 4 - Securing Agents (COMPLETE REFERENCE)
+Lab 2 - Securing Agents (COMPLETE REFERENCE)
 
 A REAL model drives an HR assistant agent that works a support ticket. The
 ticket is a POISONED document: alongside a normal "summarize the benefits

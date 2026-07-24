@@ -1,5 +1,5 @@
 """
-Lab 2 - Hardened RAG (SKELETON)
+Lab 4 - Hardened RAG (SKELETON)
 
 Add a SecurityGuard with defense in depth, in front of the SAME Chroma vector
 database used by the vulnerable version:

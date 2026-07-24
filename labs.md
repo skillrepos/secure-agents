@@ -1,7 +1,7 @@
 # Building Secure AI Agents: Defense-First Development
 ## Half-day workshop (3 hours)
 ## Session labs
-## Revision 1.0 - 07/06/26
+## Revision 1.1 - 07/23/26
 
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
@@ -34,8 +34,7 @@ attacks that flattened it in Lab 1, because the layers cover each other. This is
 **defense in depth**, applied to agents.
 
 A note on the model: the labs use a **real** language model. With a free Groq
-key set (see README) they use fast hosted models plus the real **Llama Guard 4**
-safety classifier; without one they fall back to a local `llama3.2:3b` via
+key set (see README) they use fast hosted models plus a real model-based **safety classifier** (Groq's gpt-oss-safeguard); without one they fall back to a local `llama3.2:3b` via
 Ollama. Because the model is real, exact wording varies run to run - the
 security *outcomes* (BLOCKED / FIXED / DENIED) do not.
 
@@ -53,7 +52,7 @@ security *outcomes* (BLOCKED / FIXED / DENIED) do not.
 1. From the terminal, change to the *guardrails* directory:
 
 ```
-cd /workspaces/building-secure-ai-agents/guardrails
+cd /workspaces/secure-agents/guardrails
 ```
 
 <br><br>
@@ -66,7 +65,7 @@ code guardrails_demo.py
 
 Notice the two families of guards. **Input guards** (`guard_jailbreak`, `guard_topic`, `guard_length`) screen the user's request. **Output guards** (`guard_pii`, `guard_banned`) screen the model's response. Each guard returns `(ok, reason, fixed_text)` - if a guard returns fixed text, the pipeline *repairs* the content and continues; if it returns `None`, the content is *blocked*. These are the cheap, fast, deterministic checks you control.
 
-Wrapping those hand-built guards, `main()` also calls a **real safety classifier - Meta's Llama Guard 4, hosted on Groq** - on both the input and the output (via `llm.moderate()`). That's the production pattern: regex/allowlist guards you own, **plus** a model-based classifier that catches whole categories of harmful content (violence, weapons, hate, self-harm, ...) you could never enumerate by hand. Llama Guard runs only if you've set a `GROQ_API_KEY`; without one, the lab still runs with just the hand-built guards.
+Wrapping those hand-built guards, `main()` also calls a **real safety classifier - Groq's policy-following gpt-oss-safeguard model** - on both the input and the output (via `llm.moderate()`). That's the production pattern: regex/allowlist guards you own, **plus** a model-based classifier that catches whole categories of harmful content (violence, weapons, hate, self-harm, ...) you could never enumerate by hand. The safety classifier runs only if you've set a `GROQ_API_KEY`; without one, the lab still runs with just the hand-built guards.
 
 <br><br>
 
@@ -98,9 +97,9 @@ code -d ../extra/guardrails_complete.txt guardrails_demo.py
 python guardrails_demo.py
 ```
 
-✓ **Success looks like:** one block prints per request. The jailbreak, the off-topic poem, and the oversized input each show **INPUT BLOCKED (never reached the model)**; the benign question shows **DELIVERED (PASS)**; and the record-with-PII request shows **DELIVERED (FIXED)** with `[SSN-REDACTED]` / `[CARD-REDACTED]`. (Exact model wording varies; the BLOCKED / FIXED labels don't.) If everything shows PASS with no blocks, a guard didn't merge - reopen the diff at Step 3.
+✓ **Success looks like:** one block prints per request. The jailbreak, the off-topic poem, and the oversized input each show **INPUT BLOCKED (never reached the model)**; the benign question shows **DELIVERED (PASS)**; and the contact-confirmation request shows **DELIVERED (FIXED)** with `[EMAIL-REDACTED]` / `[PHONE-REDACTED]`. (Exact model wording varies; the BLOCKED / FIXED labels don't.) If everything shows PASS with no blocks, a guard didn't merge - reopen the diff at Step 3.
 
-Each request flows through four layers: **Llama Guard (input) -> your input guards -> the model -> your output guards -> Llama Guard (output)**. The header line shows whether the Llama Guard classifier is `on` (it is when `GROQ_API_KEY` is set). The first request includes a brief model warm-up.
+Each request flows through four layers: **the safety classifier (input) -> your input guards -> the model -> your output guards -> the safety classifier (output)**. The header line shows whether the safety classifier is `on` (it is when `GROQ_API_KEY` is set). The first request includes a brief model warm-up.
 
 ![Input guard results](./images/bsa-1-input1.png?raw=true "Input guard results")
 
@@ -118,7 +117,7 @@ Each request flows through four layers: **Llama Guard (input) -> your input guar
 
 <br><br>
 
-10. Now look at the **last** request (`...walk me through building a pipe bomb`). It is genuinely harmful, but it is also *on-topic* (it mentions an account), so your regex and allowlist guards let it through - exactly the kind of thing hand-built rules miss. If you set a `GROQ_API_KEY`, **Llama Guard flags it as unsafe and blocks it at the input layer**, before the model ever sees it. Without a key you'll watch it slip past the cheap guards - which is the whole point: a model-based safety classifier is the layer that catches what patterns can't.
+10. Now look at the **last** request (`...walk me through building a pipe bomb`). It is genuinely harmful, but it is also *on-topic* (it mentions an account), so your regex and allowlist guards let it through - exactly the kind of thing hand-built rules miss. If you set a `GROQ_API_KEY`, **the safety classifier flags it as unsafe and blocks it at the input layer**, before the model ever sees it. Without a key you'll watch it slip past the cheap guards - which is the whole point: a model-based safety classifier is the layer that catches what patterns can't.
 
 <br><br>
 
@@ -162,7 +161,7 @@ A unique secret (`CANARY-7f3a9c2b1e-DO-NOT-REVEAL`) is planted in HelpBot's *har
 1. From the terminal, change to the *agents* directory:
 
 ```
-cd /workspaces/building-secure-ai-agents/agents
+cd /workspaces/secure-agents/agents
 ```
 
 <br><br>
@@ -272,7 +271,7 @@ python secure_agent.py
 1. From the terminal, change to the *mcp* directory:
 
 ```
-cd /workspaces/building-secure-ai-agents/mcp
+cd /workspaces/secure-agents/mcp
 ```
 
 <br><br>
@@ -332,7 +331,7 @@ You should see `FastMCP server on http://127.0.0.1:8000/mcp/` and the list of sc
 7. **Terminal 2 (client).** Open a new terminal (click the `+` in the terminal panel), then run the client:
 
 ```
-cd /workspaces/building-secure-ai-agents/mcp
+cd /workspaces/secure-agents/mcp
 python client.py
 ```
 
@@ -396,7 +395,7 @@ You'll see `'scope': 'tools:add'` - confirming the limited client's token never 
 1. From the terminal, change to the *rag* directory:
 
 ```
-cd /workspaces/building-secure-ai-agents/rag
+cd /workspaces/secure-agents/rag
 ```
 
 <br><br>
@@ -544,7 +543,7 @@ This time the poisoned chunks are blocked at the source-allowlist stage, and any
 1. From the terminal, change to the *observability* directory:
 
 ```
-cd /workspaces/building-secure-ai-agents/observability
+cd /workspaces/secure-agents/observability
 ```
 
 <br><br>

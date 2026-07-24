@@ -1,5 +1,5 @@
 """
-Lab 2 - Build the vector database (provided complete).
+Lab 4 - Build the vector database (provided complete).
 
 Indexes every document in docs/ into a local Chroma vector DB with real
 embeddings. This simulates an attacker who has slipped a poisoned document
