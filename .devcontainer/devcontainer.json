@@ -1,31 +1,44 @@
+
 {
-    "image": "mcr.microsoft.com/devcontainers/base:bookworm",
-    "remoteEnv": {
-        "OLLAMA_MODEL": "llama3.2:3b",
-        "GROQ_API_KEY": "${localEnv:GROQ_API_KEY}",
-        "ORT_LOG_SEVERITY_LEVEL": "3"
-    },
-    "hostRequirements": { "cpus": 4, "memory": "16gb", "storage": "32gb" },
-    "features": {
-        "ghcr.io/devcontainers/features/github-cli:1": {},
-        "ghcr.io/devcontainers/features/python:1": {}
-    },
-    "customizations": {
-        "vscode": {
-            "settings": {
-                "python.defaultInterpreterPath": "/workspaces/building-secure-ai-agents/py_env/bin/python",
-                "github.copilot.enable": { "*": false },
-                "editor.inlineSuggest.enabled": false,
-                "workbench.startupEditor": "readme",
-                "workbench.editorAssociations": { "*.md": "vscode.markdown.preview.editor" },
-                "files.associations": { "*.mmd": "mermaid" },
-                "terminal.integrated.defaultProfile.linux": "bash"
-            },
-            "extensions": ["vstirbu.vscode-mermaid-preview"]
-        }
-    },
-    "postCreateCommand": "bash -i scripts/pysetup.sh py_env && bash scripts/startup_ollama.sh",
-    "postAttachCommand": {
-        "ollama": "bash scripts/startup_ollama.sh --skip-pull"
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+  "remoteEnv": {
+    "OLLAMA_MODEL": "llama3.2:3b",
+    "GROQ_API_KEY": "${localEnv:GROQ_API_KEY}",
+    "ORT_LOG_SEVERITY_LEVEL": "3"
+  },
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb",
+    "storage": "32gb"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/python:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/workspaces/secure-agents/py_env/bin/python",
+        "github.copilot.enable": {
+          "*": false
+        },
+        "editor.inlineSuggest.enabled": false,
+        "workbench.startupEditor": "readme",
+        "workbench.editorAssociations": {
+          "*.md": "vscode.markdown.preview.editor"
+        },
+        "files.associations": {
+          "*.mmd": "mermaid"
+        },
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "vstirbu.vscode-mermaid-preview"
+      ]
     }
+  },
+  "postCreateCommand": "bash -i scripts/pysetup.sh py_env && bash scripts/startup_ollama.sh",
+  "postAttachCommand": {
+    "ollama": "bash scripts/startup_ollama.sh --skip-pull"
+  }
 }
