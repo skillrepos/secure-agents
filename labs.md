@@ -83,7 +83,7 @@ code -d ../extra/guardrails_complete.txt guardrails_demo.py
 
 <br><br>
 
-4. Merge the four blocks from the complete version (left) into the skeleton (right). Hover any red block for a note on what it does. When no differences remain, close the diff tab to save.
+4. Merge the four blocks from the complete version (left) into the skeleton (right). Hover the *code* in a red block for a note on what it does - the lightbulb in the gutter marks which blocks have one. When no differences remain, close the diff tab to save.
 
 <br><br>
 
@@ -195,7 +195,7 @@ code -d ../extra/secure_agent_complete.txt secure_agent.py
 
 <br><br>
 
-5. Merge the three controls - `allowed_tools` (least privilege), `approve` (the approval gate) and `within_budget` (budgets). Hover any red block for a note on what it does. When no differences remain, close the diff tab to save.
+5. Merge the three controls - `allowed_tools` (least privilege), `approve` (the approval gate) and `within_budget` (budgets). Hover the *code* in a red block for a note on what it does - the lightbulb in the gutter marks which blocks have one. When no differences remain, close the diff tab to save.
 
 <br><br>
 
@@ -431,7 +431,7 @@ code -d ../extra/rag_hardened_complete.txt rag_hardened.py
 
 <br><br>
 
-7. Merge the three blocks: the four **policies**, `filter_chunks()` (runs *before* the model: allowlist -> injection -> relevance) and `scan_output()` (runs *after* it). Hover any red block for a note. When no differences remain, close the diff tab to save.
+7. Merge the three blocks: the four **policies**, `filter_chunks()` (runs *before* the model: allowlist -> injection -> relevance) and `scan_output()` (runs *after* it). Hover the *code* in a red block for a note - the lightbulb in the gutter marks which blocks have one. When no differences remain, close the diff tab to save.
 
 <br><br>
 
@@ -513,7 +513,7 @@ code -d ../extra/observable_agent_complete.txt observable_agent.py
 
 <br><br>
 
-4. Two pieces to complete - hover either block for a note:
+4. Two pieces to complete - hover the *code* in either block for a note:
    - **`instrument_call`** - wraps one agent turn in a span with attributes (`user`, `tool`, `args`, `sensitive`, `status`) and prints an `[AUDIT]` line with the real `trace_id` / `span_id`.
    - **`detect_anomalies`** - reads the captured spans and flags denied calls, sensitive-tool bursts, and any user touching sensitive tooling.
 
