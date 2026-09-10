@@ -12,11 +12,39 @@ import os
 import re
 import glob
 import sys
+import contextlib
+import tempfile
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "common"))
 import llm
 
 import chromadb
+
+@contextlib.contextmanager
+def quiet_onnx():
+    """Hide onnxruntime's harmless PCI device-discovery warning.
+
+    The embedding model prints it from native code straight to fd 2, so Python
+    logging filters and ORT_LOG_SEVERITY_LEVEL never see it. We capture fd 2
+    for the duration and re-emit anything that ISN'T that warning, so genuine
+    errors still reach the student.
+    """
+    saved = os.dup(2)
+    try:
+        with tempfile.TemporaryFile(mode="w+") as buf:
+            os.dup2(buf.fileno(), 2)
+            try:
+                yield
+            finally:
+                os.dup2(saved, 2)
+                buf.seek(0)
+                kept = [ln for ln in buf.readlines() if "onnxruntime" not in ln]
+                if kept:
+                    sys.stderr.write("".join(kept))
+                    sys.stderr.flush()
+    finally:
+        os.close(saved)
+
 
 HERE = os.path.dirname(__file__)
 DOCS_DIR = os.path.join(HERE, "docs")
@@ -63,7 +91,8 @@ def kb_stats():
 def retrieve(query, k=3):
     """Semantic search the vector DB; return top-k chunks with a 0..1 relevance."""
     col = get_collection()
-    res = col.query(query_texts=[query], n_results=k)
+    with quiet_onnx():                    # first query loads the embedding model
+        res = col.query(query_texts=[query], n_results=k)
     out = []
     for doc, meta, dist in zip(res["documents"][0], res["metadatas"][0],
                                res["distances"][0]):

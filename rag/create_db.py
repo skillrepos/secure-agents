@@ -25,11 +25,12 @@ def main():
     col = client.create_collection(kb.COLLECTION, metadata={"hnsw:space": "cosine"})
 
     chunks = kb.load_chunks_from_docs()
-    col.add(
-        documents=[c["text"] for c in chunks],
-        metadatas=[{"source": c["source"]} for c in chunks],
-        ids=[f"chunk-{i}" for i in range(len(chunks))],
-    )
+    with kb.quiet_onnx():                 # embedding the chunks loads the model
+        col.add(
+            documents=[c["text"] for c in chunks],
+            metadatas=[{"source": c["source"]} for c in chunks],
+            ids=[f"chunk-{i}" for i in range(len(chunks))],
+        )
 
     print(f"=== Built Chroma collection '{kb.COLLECTION}' at {kb.DB_DIR} ===")
     print(f"Indexed {len(chunks)} chunks (real embeddings).\n")
