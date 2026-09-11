@@ -5,7 +5,7 @@
 These instructions will guide you through configuring a GitHub Codespaces
 environment that you can use to run the workshop labs.
 
-This workshop is for **agent builders**. Across five labs you take one
+This workshop is for agent builders. Across five labs you take one
 deliberately vulnerable AI support agent and harden it, layer by layer:
 guardrails and canary tokens, least-privilege tool controls, a scoped MCP
 server, RAG poisoning defenses, and observability. The final lab
@@ -14,10 +14,9 @@ short.
 
 ### Prerequisites
 
-Experience building AI agents (via the AI Accelerator, an agents workshop, or
-equivalent), comfort with Python, and a basic understanding of agent
+Experience building AI agents, comfort with Python, and a basic understanding of agent
 architectures (ReAct, tool calling, MCP). No prior security background is
-assumed &mdash; every term is defined as it comes up.
+assumed.
 
 <br><br>
 
@@ -64,8 +63,8 @@ C. Give it a name, create it, and copy the key value. Save it somewhere — you 
 
 ![groq api keys](./images/v3appb36.png?raw=true "groq api keys")
  
-The labs can still run without a key &mdash; they fall back to the local Ollama model
-&mdash; but a Groq key makes them faster and unlocks the model-based safety classifier.
+The labs can still run without a key but they fall back to the local Ollama model
+A Groq key makes them faster and unlocks the model-based safety classifier.
 
 <br><br>
 
