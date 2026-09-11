@@ -1,6 +1,6 @@
 # Building Secure AI Agents: Defense-First Development
 
-## Half-day workshop (3 hours) &mdash; Revision 1.14
+## Half-day workshop (3 hours) &mdash; Revision 1.15
 
 These instructions will guide you through configuring a GitHub Codespaces
 environment that you can use to run the workshop labs.
@@ -75,7 +75,7 @@ After the initial startup, it will run a script to setup the python environment 
 
 The codespace is ready to use when you see a prompt like the one shown below in its terminal.
 
-![Ready to use](./images/31ai3.png?raw=true "Ready to use")
+![Ready to use](./images/bsa2.png?raw=true "Ready to use")
 
 
 <br><br>
