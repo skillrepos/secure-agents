@@ -51,15 +51,18 @@ else
         echo "[ollama] pulling model $MODEL (one-time download)..."
         ollama pull "$MODEL"
     fi
+fi
 
-    if command -v python3 >/dev/null 2>&1; then
-        echo "[ollama] warming up model $MODEL..."
-        if ! python3 "$SCRIPT_DIR/warmup_ollama.py" --model "$MODEL"; then
-            echo "[ollama] warning: warmup failed; startup can continue."
-        fi
-    else
-        echo "[ollama] warning: python3 not found; skipping warmup"
+# Always warm up, including on re-attach. Loading the model off disk takes a
+# minute or more on a 4-core box; doing it here means the first lab command is
+# instant instead of appearing to hang. Costs ~0.2s when it is already loaded.
+if command -v python3 >/dev/null 2>&1; then
+    echo "[ollama] warming up model $MODEL..."
+    if ! python3 "$SCRIPT_DIR/warmup_ollama.py" --model "$MODEL"; then
+        echo "[ollama] warning: warmup failed; startup can continue."
     fi
+else
+    echo "[ollama] warning: python3 not found; skipping warmup"
 fi
 
 echo "[ollama] ready. Server: http://localhost:11434 | Model: $MODEL"

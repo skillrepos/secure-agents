@@ -84,7 +84,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--timeout",
         type=int,
-        default=int(os.environ.get("OLLAMA_TIMEOUT", "120")),
+        default=int(os.environ.get("OLLAMA_TIMEOUT", "300")),
         help="HTTP timeout seconds",
     )
     parser.add_argument(
