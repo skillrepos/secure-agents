@@ -1,7 +1,7 @@
 # Building Secure AI Agents: Defense-First Development
 ## Half-day workshop (3 hours)
 ## Session labs
-## Revision 1.15 - 09/11/26
+## Revision 1.16 - 09/11/26
 
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
@@ -421,7 +421,7 @@ The bulletin really *is* about password resets, so it scores high and the answer
 
 <br><br>
 
-6. Now add the defenses. Open the diff-and-merge view:
+6. Type `quit` to exit the vulnerable agent. Now add the defenses. Open the diff-and-merge view:
 
 ```
 code -d ../extra/rag_hardened_complete.txt rag_hardened.py
