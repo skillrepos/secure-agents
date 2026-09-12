@@ -1,7 +1,7 @@
 # Building Secure AI Agents: Defense-First Development
 ## Half-day workshop (3 hours)
 ## Session labs
-## Revision 1.16 - 09/11/26
+## Revision 1.17 - 09/11/26
 
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
@@ -443,7 +443,7 @@ python rag_hardened.py
 
 Startup now labels each source `[TRUSTED]` in green or `[UNKNOWN]` in red.
 
-![Trusted vs unknown sources](./images/bsa-4-trusted.png?raw=true "Trusted vs unknown sources")
+![Trusted vs unknown sources](./images/bsa4.png?raw=true "Trusted vs unknown sources")
 
 <br><br>
 
