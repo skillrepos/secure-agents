@@ -68,7 +68,11 @@ def _post(url, payload, headers, timeout=120):
 
 
 def _ollama(messages, temperature, max_tokens):
+    # keep_alive holds the model in memory between labs. Without it Ollama
+    # falls back to its 5-minute default and the first call of each lab pays
+    # a reload, undoing the warm-up done at codespace attach.
     payload = {"model": OLLAMA_MODEL, "messages": messages, "stream": False,
+               "keep_alive": "8h",
                "options": {"temperature": temperature, "num_predict": max_tokens}}
     try:
         resp = _post(OLLAMA_URL, payload, {})

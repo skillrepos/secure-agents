@@ -92,15 +92,7 @@ You should see that `AGENT_PROVIDER` and `GROQ_API_KEY` are set.
 
 <br><br>
 
-**7. Run the warm-up script for faster first responses.**
-
-```
-python scripts/warmup_ollama.py
-```
-
-<br><br>
-
-**8. Open `labs.md`** and follow along. You can open it in the codespace
+**7. Open `labs.md`** and follow along. You can open it in the codespace
 (right-click > *Open Preview*) or in a separate browser tab.
 
 **Now you are ready for the labs!**
@@ -123,7 +115,8 @@ python scripts/warmup_ollama.py
 
 1. Go to https://github.com/codespaces
 2. Find the codespace, right-click, and select *Open in browser*
-3. Repeat steps 6 & 7 above to set the Groq key and re-run the warm-up.
+3. Repeat step 6 above to set the Groq key. Ollama restarts and re-warms itself
+   automatically each time the codespace attaches, so there is no warm-up to re-run.
 
 <br><br>
 
