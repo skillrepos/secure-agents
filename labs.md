@@ -1,7 +1,7 @@
 # Building Secure AI Agents: Defense-First Development
 ## Half-day workshop (3 hours)
 ## Session labs
-## Revision 1.18 - 09/11/26
+## Revision 1.20 - 09/12/26
 
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
@@ -485,7 +485,7 @@ Startup now labels each source `[TRUSTED]` in green or `[UNKNOWN]` in red.
 </p>
 <br><br>
 
-**Lab 5: Auditing and Observability for Agents *(homework-capable)***
+**Lab 5: Auditing and Observability for Agents**
 
 **Purpose: Make HelpBot observable with real OpenTelemetry. Wrap every tool call in a span - trace ID, span ID, attributes, status - under one session trace, then run an anomaly detector over the captured spans to surface suspicious patterns. You can't defend what you can't see.**
 
