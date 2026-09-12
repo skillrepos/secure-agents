@@ -1,7 +1,7 @@
 # Building Secure AI Agents: Defense-First Development
 ## Half-day workshop (3 hours)
 ## Session labs
-## Revision 1.21 - 09/12/26
+## Revision 1.22 - 09/12/26
 
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
@@ -541,7 +541,7 @@ python observable_agent.py
 
 The run pauses between its three sections - press **Enter** to move on.
 
-✓ **Success looks like:** a stream of `[AUDIT]` lines (one per request), each carrying a `trace=` and `span=` id - green where the call was allowed, red where it was denied - followed by a **TELEMETRY SUMMARY** and an **ANOMALY DETECTION** block that flags `mallory`'s denied exports, a **BURST**, and the users who touched sensitive tooling. If you see `NotImplementedError` or no anomaly findings, a function didn't merge - reopen the diff at Step 3.
+✓ **Success looks like:** a stream of `[AUDIT]` lines (one per request), each carrying a `trace=` and `span=` id - green where the call was allowed, red where it was denied - followed by a **TELEMETRY SUMMARY** and an **ANOMALY DETECTION** block that flags `mallory`'s denied exports, and the users who touched sensitive tooling. If you see `NotImplementedError` or no anomaly findings, a function didn't merge - reopen the diff at Step 3.
 
 ![Structured audit stream](./images/bsa-5-audit.png?raw=true "Structured audit stream")
 
