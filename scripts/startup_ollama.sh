@@ -38,7 +38,7 @@ fi
 # Start the server in the background if it isn't already running.
 if ! curl -s http://localhost:11434/api/tags >/dev/null 2>&1; then
     echo "[ollama] starting server..."
-    nohup ollama serve >/tmp/ollama.log 2>&1 &
+    setsid nohup ollama serve >/tmp/ollama.log 2>&1 &
     sleep 3
 fi
 
@@ -57,10 +57,12 @@ fi
 # minute or more on a 4-core box; doing it here means the first lab command is
 # instant instead of appearing to hang. Costs ~0.2s when it is already loaded.
 if command -v python3 >/dev/null 2>&1; then
-    echo "[ollama] warming up model $MODEL..."
-    if ! python3 "$SCRIPT_DIR/warmup_ollama.py" --model "$MODEL"; then
-        echo "[ollama] warning: warmup failed; startup can continue."
-    fi
+    # Detached on purpose. VS Code interrupts the postAttach terminal when it
+    # injects the venv activation, and that ^C kills a foreground warmup -
+    # which is exactly the thing we are here to make reliable.
+    echo "[ollama] warming up model $MODEL in the background (log: /tmp/ollama-warmup.log)"
+    setsid nohup python3 "$SCRIPT_DIR/warmup_ollama.py" --model "$MODEL" \
+        >/tmp/ollama-warmup.log 2>&1 &
 else
     echo "[ollama] warning: python3 not found; skipping warmup"
 fi

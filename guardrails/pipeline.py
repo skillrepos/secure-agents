@@ -174,9 +174,10 @@ def _undefended(run, canary):
     for i in UNDEFENDED_SHOW:
         run_i(run, i)
     run(LEAK_REQUEST, replay=_leaked_reply(canary))
-    print("\nEverything above was DELIVERED. The jailbreak reached the model, the "
-          "contact details went out verbatim, and the leaked system prompt reached "
-          "the user with nothing to notice it.")
+    print("\nNothing here was checked. The jailbreak went straight to the model - "
+          "no guard looked at it - and it declined only because this model happened "
+          "to; that is luck, not a control. The contact details went out verbatim, "
+          "and the leaked system prompt reached the user with nothing to notice it.")
     print("Merge the four blocks from extra/guardrails_complete.txt and run again.")
 
 
