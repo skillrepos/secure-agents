@@ -1,7 +1,7 @@
 # Building Secure AI Agents: Defense-First Development
 ## Half-day workshop (3 hours)
 ## Session labs
-## Revision 1.14 - 09/10/26
+## Revision 1.15 - 09/11/26
 
 
 **Follow the startup instructions in the README.md file IF NOT ALREADY DONE!**
@@ -51,7 +51,7 @@ back to local `llama3.2:3b`. Exact wording varies run to run - the security
 
 **Lab 1: Guardrails and Canary Tokens - Wrapping the Model**
 
-**Purpose: Put the first layer of defense around HelpBot - input guards before the model, output guards after it, and a canary token that catches a prompt leak the guards miss. The terms used here are defined on the *Lab 1 vocabulary* slide.**
+**Purpose: Put the first layer of defense around HelpBot - input guards before the model, output guards after it, and a canary token that catches a prompt leak the guards miss.**
 
 <br>
 
@@ -149,7 +149,7 @@ Six requests go through the pipeline one at a time, pausing for **Enter** after 
 
 **Lab 2: Securing Agent Tool Calls - Least Privilege, Approval, and Budgets**
 
-**Purpose: Constrain HelpBot so a hijacked prompt can't make it misuse its tools. Watch the agent obey a poisoned support ticket - exporting employee data, emailing it out, deleting the audit log - then add the three controls that contain the same attack. The terms used here are defined on the *Lab 2 vocabulary* slide.**
+**Purpose: Constrain HelpBot so a hijacked prompt can't make it misuse its tools. Watch the agent obey a poisoned support ticket - exporting employee data, emailing it out, deleting the audit log - then add the three controls that contain the same attack.**
 
 <br>
 
@@ -239,7 +239,7 @@ The undefended run prints first and pauses; press **Enter** for the secured run.
 
 **Purpose: Harden the Model Context Protocol (MCP) server HelpBot uses to reach its tools. A token authority issues scoped JWTs, and a real FastMCP server enforces per-tool scope checks in middleware - so one server grants different clients different subsets of tools.**
 
-**This lab uses two terminals: the MCP server and the client. The terms used here are defined on the *Lab 3 vocabulary* slide.**
+**This lab uses two terminals: the MCP server and the client.**
 
 <br>
 
@@ -358,7 +358,7 @@ You'll see `'scope': 'tools:add'` - the limited client's token never carries the
 
 **Lab 4: Hardening HelpBot's RAG Pipeline Against Poisoned Documents**
 
-**Purpose: One malicious document in HelpBot's knowledge base hijacks the model and phishes users. See it happen, then add four defensive layers - source allowlisting, injection detection, relevance filtering and output scanning - that neutralize it. The terms used here are defined on the *Lab 4 vocabulary* slide.**
+**Purpose: One malicious document in HelpBot's knowledge base hijacks the model and phishes users. See it happen, then add four defensive layers - source allowlisting, injection detection, relevance filtering and output scanning - that neutralize it.**
 
 <br>
 
